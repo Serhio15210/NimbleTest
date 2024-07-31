@@ -1,0 +1,18 @@
+@import "src/styles/media-queryes";
+.formContainer {
+  min-width: 280px;
+  width: 280px;
+  display: flex;
+  flex-direction: column;
+  gap: 30px;
+
+  .title {
+    font-size: 24px;
+    font-weight: 600;
+  }
+.error{
+  color: red;
+  text-align: center;
+}
+
+}

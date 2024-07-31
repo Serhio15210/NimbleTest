@@ -1,0 +1,131 @@
+@import "src/styles/variables";
+@import "src/styles/media-queryes";
+.contactsListContainer{
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  max-width: 600px;
+  width: 100%;
+
+  position: relative;
+
+  .top {
+    position: absolute;
+    width: 100%;
+    left: 0;
+    right: 0;
+    height: 20px;
+    pointer-events: none;
+    z-index: 2;
+    top: 0;
+    background: linear-gradient(to bottom, white, rgba(255, 255, 255, 0));
+  }
+  .bottom {
+    position: absolute;
+    width: 100%;
+    left: 0;
+    right: 0;
+    height: 20px;
+    pointer-events: none;
+    z-index: 2;
+    bottom: 0;
+    background: linear-gradient(to top, white, rgba(255, 255, 255, 0));
+  }
+  .title{
+    font-weight: 600;
+    font-size: 24px;
+  }
+  .cardsContainer{
+    max-height: calc(100vh - 150px);
+    overflow-y: auto;
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+    overflow-x: hidden;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    width: 100%;
+
+    position: relative;
+
+  }
+  .contact {
+    cursor: pointer;
+    width: 95%;
+    display: flex;
+    flex-direction: row;
+    align-items: flex-start;
+    gap: 15px;
+    background: $gray;
+    padding: 15px;
+    border-radius: 5px;
+    transition: all 0.2s ease-in-out;
+    position: relative;
+    &:last-child{
+      margin-bottom: 50px;
+    }
+    &:first-child{
+      margin-top: 10px;
+    }
+    .delete{
+      width: 30px;
+      height: 30px;
+      position: absolute;
+      right: 0;
+      opacity: 0;
+      pointer-events: none;
+      z-index: 3;
+    }
+    .avatar{
+      width: 60px;
+      height: 60px;
+      border-radius: 50%;
+    }
+    .profile {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+
+      span{
+        color: $blue;
+        text-decoration: underline;
+      }
+    }
+    &:hover{
+      background: $blue;
+      color: white;
+      .profile span{
+        color: white;
+      }
+      svg{
+        opacity: 1;
+        cursor: pointer;
+        pointer-events: auto;
+      }
+    }
+    .tagsRow{
+      display: flex;
+      flex-direction: row;
+      align-items: center;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+  }
+  .new-indicator{
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    position: absolute;
+    background: $red;
+  }
+  @include mobile {
+    .cardsContainer {
+      max-height: calc(100vh/4);
+      padding-bottom: 100vh;
+      align-items: center;
+      .contact {
+        width: 90%;
+      }
+    }
+  }
+}
