@@ -1,5 +1,4 @@
 import {createApi, fetchBaseQuery} from "@reduxjs/toolkit/query/react";
-import {BASE_URL} from "../../constants";
 
 
 export const listApi = createApi({
@@ -7,13 +6,13 @@ export const listApi = createApi({
     tagTypes: ["contacts"],
     baseQuery: fetchBaseQuery(
         {
-        prepareHeaders: async (headers, query) => {
-            headers.set("Authorization", `Bearer VlP9cwH6cc7Kg2LsNPXpAvF6QNmgZn`);
-            headers.set('Access-Control-Allow-Origin', '*')
-            return headers;
-        },
+            prepareHeaders: async (headers, query) => {
+                headers.set("Authorization", `Bearer ${process.env.AUTH_TOKEN}`);
+                headers.set('Access-Control-Allow-Origin', '*')
+                return headers;
+            },
 
-        credentials:"same-origin"
+            credentials: "same-origin"
         }),
     endpoints: (builder) => ({
         getContacts: builder.query({
@@ -44,16 +43,14 @@ export const listApi = createApi({
             invalidatesTags: result => ["contacts"],
         }),
         addTegToContact: builder.mutation({
-            query: ({id, tags} ) => {
-                console.log(id,tags)
+            query: ({id, tags}) => {
                 return {
                     url: `/contacts/${id}/tags`,
                     method: "PUT",
                     body: {
-                        tags:tags
+                        tags: tags
                     },
                 }
-
             },
             invalidatesTags: result => ["contact"],
         }),
@@ -62,5 +59,7 @@ export const listApi = createApi({
 export const {
     useGetContactsQuery,
     useGetContactQuery,
+    useDeleteContactMutation,
+    useCreateContactMutation
 
 } = listApi;

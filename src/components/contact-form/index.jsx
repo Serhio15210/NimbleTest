@@ -1,66 +1,114 @@
-import React, {useEffect, useRef, useState} from 'react';
+import React, {useEffect} from 'react';
 import "./ContactForm.scss"
 import {Button, TextField} from "@mui/material";
-import {listApi} from "../../redux/api/listApi";
 import {setNewContactId} from "../../redux/reducers/listReducer";
 import {useDispatch} from "react-redux";
+import {useContactForm} from "./hooks/use-contact-form";
 
 const ContactForm = () => {
-    const [createContact, {isLoading, isSuccess, error,data}] = listApi.useCreateContactMutation()
-    const [firstName, setFirstName] = useState('')
-    const [lastName, setLastName] = useState('')
-    const [email, setEmail] = useState('')
-    const [errorText, setErrorText] = useState('')
-    const dispatch=useDispatch()
-    const create = async () => {
-        const contact = {
-            fields: {
-                'first name': [{value: firstName, modifier: ""}],
-                'last name': [{value: lastName, modifier: ""}],
-                email: [{label: 'email', value: email, modifier: ""}]
-            },
-            record_type: 'person',
-            privacy: {
-                edit: null,
-                read: null,
-            },
-            owner_id: null,
+    const dispatch = useDispatch()
+    const {
+        form,
+        emailValidator,
+        lastNameValidator,
+        firstNameValidator,
+        isLoading,
+        errorText,
+        isSuccess, setErrorText,
+        data, error
+    } = useContactForm()
 
-        }
-        await createContact(contact)
-        if (!error) {
-            setFirstName('')
-            setLastName('')
-            setEmail('')
-            dispatch(setNewContactId(data?.id))
-
-        }
-    }
     useEffect(() => {
-        if (error){
-             setErrorText(error?.data?.human_readable_error)
-        }else if (isSuccess) {
-            setFirstName('')
-            setLastName('')
-            setEmail('')
+        if (error) {
+            setErrorText(error?.data?.human_readable_error)
+        } else if (isSuccess) {
             dispatch(setNewContactId(data?.id))
             setErrorText('')
         }
 
-    }, [error,isSuccess]);
+    }, [error, isSuccess]);
 
 
     return (
-        <div className="formContainer">
+        <div>
             <p className={"title"}>Create Contact</p>
-            <TextField error={errorText?.includes('first name')} label="First Name" variant="outlined" value={firstName}
-                       onChange={(e) => setFirstName(e.target.value)}/>
-            <TextField error={errorText?.includes('last name')} label="Last Name" variant="outlined" value={lastName} onChange={(e) => setLastName(e.target.value)}/>
-            <TextField error={errorText?.includes('email')} label="Email" variant="outlined" value={email} onChange={(e) => setEmail(e.target.value)}/>
-            <Button variant="contained" onClick={create} disabled={isLoading} >Contained</Button>
-            <p className="error">{errorText}</p>
+            <form
+                onSubmit={(e) => {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    form.handleSubmit();
+                }}
+                className="formContainer"
+            >
+                <form.Field
+                    name="firstName"
+                    validators={{
+                        onSubmit: ({value}) => firstNameValidator(value)
+                    }}
+                    children={(field) => (
+                        <div className="field">
+                            <TextField
+                                error={errorText?.includes('first name') || field.state.meta.errors.length}
+                                label="First Name"
+                                variant="outlined"
+                                value={field.state.value}
+                                onBlur={field.handleBlur}
+                                onChange={(e) => field.handleChange(e.target.value)}/>
+                            {field.state.meta.errors.length > 0 ? (
+                                <em role="alert">{field.state.meta.errors.join(', ')}</em>
+                            ) : null}
+                        </div>
+
+                    )}
+
+                />
+                <form.Field
+                    name="lastName"
+                    validators={{
+                        onSubmit: ({value}) => lastNameValidator(value)
+                    }}
+                    children={(field) => (
+                        <div className="field">
+                            <TextField error={errorText?.includes('last name')}
+                                       label="Last Name"
+                                       variant="outlined"
+                                       value={field.state.value}
+                                       onBlur={field.handleBlur}
+                                       onChange={(e) => field.handleChange(e.target.value)}/>
+                            {field.state.meta.errors.length > 0 ? (
+                                <em role="alert">{field.state.meta.errors.join(', ')}</em>
+                            ) : null}
+                        </div>
+
+                    )}
+                />
+                <form.Field
+                    name="email"
+                    validators={{
+                        onSubmit: ({value}) => emailValidator(value),
+                    }}
+                    children={(field) => (
+                        <div className="field">
+                            <TextField error={errorText?.includes('email')}
+                                       label="Email"
+                                       variant="outlined"
+                                       value={field.state.value}
+                                       onBlur={field.handleBlur}
+                                       onChange={(e) => field.handleChange(e.target.value)}/>
+                            {field.state.meta.errors.length > 0 ? (
+                                <em role="alert">{field.state.meta.errors.join(', ')}</em>
+                            ) : null}
+                        </div>
+                    )}
+                />
+
+                <Button variant="contained" type="submit" disabled={isLoading}>Contained</Button>
+            </form>
+
+            <em role="alert">{errorText}</em>
         </div>
     );
-};
+}
+;
 
 export default ContactForm;

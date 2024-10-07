@@ -6,13 +6,18 @@
   flex-direction: column;
   gap: 30px;
 
-  .title {
-    font-size: 24px;
-    font-weight: 600;
-  }
+
 .error{
   color: red;
   text-align: center;
 }
+.field{
+  display: flex;
+  flex-direction: column;
 
+}
+}
+.title {
+  font-size: 24px;
+  font-weight: 600;
 }

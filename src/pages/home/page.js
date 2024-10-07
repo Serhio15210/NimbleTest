@@ -1,10 +1,9 @@
 import React from 'react';
 import Layout from "../../components/layout/page";
-import "./Home.scss"
+import "../../styles/pages/home/Home.scss"
 import ContactForm from "../../components/contact-form";
 import ContactsList from "../../components/contacts-list";
 import {useGetContactsQuery} from "../../redux/api/listApi";
-import Loader from "../../components/loader";
 
 const Home = () => {
     const {data: contacts, isLoading} = useGetContactsQuery();

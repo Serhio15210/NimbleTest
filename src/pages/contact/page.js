@@ -1,6 +1,6 @@
 import React, {useEffect, useState} from 'react';
 import {useParams} from "react-router-dom";
-import "./ContactPage.scss"
+import "../../styles/pages/contact-page/ContactPage.scss"
 import {listApi, useGetContactQuery} from "../../redux/api/listApi";
 import Tag from "../../components/tag";
 import Layout from "../../components/layout/page";
